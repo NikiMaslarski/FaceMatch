@@ -10,30 +10,29 @@ else:
     rval = False
 
 
-counter = 16
-a = 0
+counter = 0
+iteration = 5
 while rval:
     img = []
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    if a == 0:
+    if iteration == 5:
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-        a = 5
+        iteration = 0
     else:
-        a = a - 1
+        iteration = iteration + 1
 
     key = cv2.waitKey(20)
     for (x, y, w, h) in faces:
-            frame = cv2.rectangle(frame, (x - 10, y - 10), (x + w + 10, y + h + 10),
+            frame = cv2.rectangle(frame, (x - 10, y - 10),
+                                  (x + w + 10, y + h + 10),
                                   (255, 0, 0), 0)
-            img.append(frame[y:y + h, x:x + w])
 
-            if key == 115 and img:
+            if key == 115:
                 counter += 1
-                cv2.imwrite("img" + str(counter) + ".jpg", img[0])
-                print("img" + str(counter) + ".jpg SAVED")
+                cv2.imwrite("img" + str(counter) + ".jpg",
+                            frame[y:y + h, x:x + w])
 
-    for index in range(len(img)):
-        cv2.imshow("cropped" + str(index), img[index])
+                print("img" + str(counter) + ".jpg SAVED")
 
     cv2.imshow("preview", frame)
     rval, frame = vc.read()
